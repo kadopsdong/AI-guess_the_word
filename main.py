@@ -22,15 +22,17 @@ with open("words.txt") as f:
     txtwordlist = lines.split(";")
 
 
+
 #Wörter werden geshuffelt und mit random letters versehen
 letterlist = []
 for i, word in enumerate(txtwordlist):
 
-    randletters = random.choices(string.ascii_lowercase, k= len(word)*2)
+    randletters = random.choices(string.ascii_lowercase, k= 15-len(word))
     letterlist.append(list(word) + randletters)
     random.shuffle(letterlist[i])
 
 
+print(letterlist)
 
 
 detector = HandDetector(detectionCon=0.8, maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
@@ -68,7 +70,12 @@ def createbuttonwith(word):
     for i, buchstabe in enumerate(letterlist):
         x=100
         y=100
-        buttonlist.append(Button([x*i,y], buchstabe))
+        if i < 5:
+            buttonlist.append(Button([x*i,y], buchstabe))
+        if 10 > i >= 5:
+            buttonlist.append(Button([x * (i - 5), y*2], buchstabe))
+        if 15 > i >= 10:
+            buttonlist.append(Button([x * (i - 10), y * 3], buchstabe))
 
     return buttonlist
 
@@ -80,7 +87,8 @@ while True:
     success, img = cap.read() # Webcam auslesen
     hands, img = detector.findHands(img, draw=True, flipType=True) # Gibt die Position der Hände zurück
 
-    img = drawbuttons(img, letterlist[3])
+    img = drawbuttons(img, letterlist[1])
+
 
 
 
