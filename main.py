@@ -3,19 +3,35 @@ import cvzone
 from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
 import numpy as np
 from pynput.keyboard import Controller
+import random
+import string
 
 webcamid = 0  # ist die Standard Kamera
 
 cap = cv2.VideoCapture(webcamid)
-cap.set(2, 1280)  # Für die größe der Tastertur
-cap.set(4, 720)  # HD Auflösung
+cap.set(2, 50)  # Für die größe der Tastertur
+cap.set(4, 1080)  # HD Auflösung
 
 # setup text
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
+#testwordlist
 
-detector = HandDetector(detectionCon=0.8)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden
+with open("words.txt") as f:
+    lines = f.readline()
+    txtwordlist = lines.split(";")
+
+letterlist = []
+for i, word in enumerate(txtwordlist):
+    randletters = random.choices(string.ascii_lowercase, k= len(word)*2)
+    letterlist.append(list(word) + randletters)
+    random.shuffle(letterlist[i])
+print(letterlist)
+
+
+
+detector = HandDetector(detectionCon=0.8, maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
 
 #Klasse erstellen für eine Liste aller Buchstaben
 #nur einmal erstellen, da man keine Anderen Variablen Deklarieren muss
@@ -25,31 +41,58 @@ class Button():
         self.size = size
         self.text = text
 
-    def draw(self,img):
-        x,y = self.pos #Minute 19:45 versteh ich auch nicht so ganz :D
-        w,h = self.size
-        cv2.rectangle(img,self.pos,(x+w,y+h),(255,0,255), cv2.FILLED) # Koordinaten + Farben
-        cv2.putText(img,self.text ,(x+15,y+75), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
     
     
     
 #neue Methode zum zeichnen des Rechtecks in dem die Buchstaben drinstehen
-#muss nur einmal erstellt werden 
-myButton = Button([100,100],"Q") # erstellen des Objektes
-    
+#muss nur einmal erstellt werden
+
+def drawbuttons(img, word):
+    buttonlisttodraw = createbuttonwith(word)
+
+    for button in buttonlisttodraw:
+        x,y = button.pos #Positon
+        w,h = button.size #Position
+        cv2.rectangle(img,button.pos,(x+w,y+h),(255,0,255), cv2.FILLED) # Koordinaten + Farben
+        cv2.putText(img,button.text ,(x+15,y+75), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
+
+    return img
+
+
+def createbuttonwith(word):
+    letterlist = list(word)
+    buttonlist = []
+
+
+
+    for i, buchstabe in enumerate(letterlist):
+        x=100
+        y=100
+        buttonlist.append(Button([x*i,y], buchstabe))
+
+    return buttonlist
+
+
+
 
 while True:
     # mit ESC kann abgebrochen werden
     success, img = cap.read() # Webcam auslesen
-    hands, img = detector.findHands(img, draw=True)  # Gibt die Position der Hände zurück
+    hands, img = detector.findHands(img, draw=True, flipType=True) # Gibt die Position der Hände zurück
 
-    myButton.draw(img)
+    img = drawbuttons(img, letterlist[1])
+
+
+
    
     #Button erstellen mit opencv
     #cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     #cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
 
     cv2.imshow("image", img)
+
+
+
     if cv2.waitKey(5) & 0xFF == 27: #hexzahl für escape
         break
 
