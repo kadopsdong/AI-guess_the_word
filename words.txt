@@ -1,1 +1,1 @@
-Ananas; Aprikose; Apfel; Kuh; Hund; Katze
+Ananas;Aprikose;Apfel;Kuh;Hund;Katze

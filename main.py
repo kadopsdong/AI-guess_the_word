@@ -16,18 +16,20 @@ cap.set(4, 1080)  # HD Auflösung
 font = cv2.FONT_HERSHEY_SIMPLEX
 
 
-#testwordlist
-
+#liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
 with open("words.txt") as f:
     lines = f.readline()
     txtwordlist = lines.split(";")
 
+
+#Wörter werden geshuffelt und mit random letters versehen
 letterlist = []
 for i, word in enumerate(txtwordlist):
+
     randletters = random.choices(string.ascii_lowercase, k= len(word)*2)
     letterlist.append(list(word) + randletters)
     random.shuffle(letterlist[i])
-print(letterlist)
+
 
 
 
@@ -44,9 +46,7 @@ class Button():
     
     
     
-#neue Methode zum zeichnen des Rechtecks in dem die Buchstaben drinstehen
-#muss nur einmal erstellt werden
-
+#Hiermit wird das aktuelle wort gezeichnet
 def drawbuttons(img, word):
     buttonlisttodraw = createbuttonwith(word)
 
@@ -58,7 +58,7 @@ def drawbuttons(img, word):
 
     return img
 
-
+#buttons aus einem wort erstellen
 def createbuttonwith(word):
     letterlist = list(word)
     buttonlist = []
@@ -80,7 +80,7 @@ while True:
     success, img = cap.read() # Webcam auslesen
     hands, img = detector.findHands(img, draw=True, flipType=True) # Gibt die Position der Hände zurück
 
-    img = drawbuttons(img, letterlist[1])
+    img = drawbuttons(img, letterlist[3])
 
 
 
