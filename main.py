@@ -29,7 +29,7 @@ class Button():
         x,y = self.pos #Minute 19:45 versteh ich auch nicht so ganz :D
         w,h = self.size
         cv2.rectangle(img,self.pos,(x+w,y+h),(255,0,255), cv2.FILLED) # Koordinaten + Farben
-        cv2.putText(img,self.text ,(x+15,y+75), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
+        cv2.putText(img,self.text ,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN,4,(255,255,255), 4) #Anzeigen des Buchstaben im Rechteck
     
     
     
