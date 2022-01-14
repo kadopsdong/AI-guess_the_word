@@ -7,6 +7,7 @@ import random
 import string
 
 webcamid = 0  # ist die Standard Kamera
+FinalString = ""
 
 cap = cv2.VideoCapture(webcamid)
 cap.set(2, 50)  # Für die größe der Tastertur
@@ -89,6 +90,9 @@ while True:
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
 
+        if counterofwords == len(txtwordlist) + 1:
+            counterofwords = 0
+
         #eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         #rectangle bleibt grün
@@ -97,6 +101,7 @@ while True:
     else: #eingabe ist Fehlerhaft
         #rectangle wird rot
         #dann wird hier das rectangle beschrieben
+        pass
 
     img = drawbuttons(img, letterlist[counterofwords])
 
