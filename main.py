@@ -23,9 +23,15 @@ with open("words.txt") as f:
 
 
 
+
+
 #Wörter werden geshuffelt und mit random letters versehen
 letterlist = []
 for i, word in enumerate(txtwordlist):
+    # es werden wörter gelöscht, die länger als 15 zeichen sind
+    if len(word) >= 15:
+        txtwordlist.pop(i)
+        continue
 
     randletters = random.choices(string.ascii_lowercase, k= 15-len(word))
     letterlist.append(list(word) + randletters)
@@ -45,15 +51,6 @@ class Button():
         self.size = size
         self.text = text
 
-<<<<<<< HEAD
-    def draw(self,img):
-        x,y = self.pos #Minute 19:45 versteh ich auch nicht so ganz :D
-        w,h = self.size
-        cv2.rectangle(img,self.pos,(x+w,y+h),(255,0,255), cv2.FILLED) # Koordinaten + Farben
-        cv2.putText(img,self.text ,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN,4,(255,255,255), 4) #Anzeigen des Buchstaben im Rechteck
-=======
->>>>>>> cf592a864b33dcd1d3c40a5ea904bf2a4c2ee220
-    
     
     
 #Hiermit wird das aktuelle wort gezeichnet
@@ -95,7 +92,7 @@ while True:
     success, img = cap.read() # Webcam auslesen
     hands, img = detector.findHands(img, draw=True, flipType=True) # Gibt die Position der Hände zurück
 
-    img = drawbuttons(img, letterlist[1])
+    img = drawbuttons(img, letterlist[3])
 
 
 
