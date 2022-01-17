@@ -1,3 +1,4 @@
+from cgitb import text
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
@@ -11,6 +12,12 @@ webcamid = 0  # ist die Standard Kamera
 cap = cv2.VideoCapture(webcamid)
 cap.set(2, 50)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
+
+#Text einlesen
+finalText = ""
+
+#um Tastatureingaben nachzuahmen
+keyboard = Controller()
 
 # setup text
 font = cv2.FONT_HERSHEY_SIMPLEX
@@ -94,9 +101,27 @@ while True:
 
     img = drawbuttons(img, letterlist[3])
 
+    #Zeigen der Handumrandung
+    
+    if hands:
+        for button in letterlist: 
+            x, y = button.pos
+            w, h = button.size
 
+            if x < hands[8][0] < x + w and y < hands[8][1] < y + h:
+                cv2.rectangle(img, (x-5,y-5),(x+w+5, y+h+5),(175,0,175),cv2.FILLED)
+                cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                l,_,_ = detector.findDistance(8,12,img,draw=False)
+                print (l)
+                # l ist zum anzeigen der Fingerweite, kan mann dann abändern um die genauigkeit zu erhöhen
 
-
+    #clicken mit der Hand fügt buchstabe in finalText ein, die 30 ist von l, der distanz
+    if l < 30:
+        keybord.press(letterlist.text)
+        cv2.rectangle (img,button.pos, ((x+w,y+h),(0,255,0),cv2.FILLED))
+        cv2.putText(img,button.text,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN, 4, (255,255,255),4)
+        finalText += button.text
+        sleep(0.15)
    
     #Button erstellen mit opencv
     #cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
@@ -106,9 +131,8 @@ while True:
 
 
 
+
     if cv2.waitKey(5) & 0xFF == 27: #hexzahl für escape
         break
 
 
-
-    #bis Minute 22:19 geschaut
