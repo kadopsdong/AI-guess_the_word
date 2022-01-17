@@ -1,3 +1,4 @@
+from asyncio import sleep
 from cgitb import text
 import cv2
 import cvzone
@@ -117,7 +118,7 @@ while True:
 
     #clicken mit der Hand fügt buchstabe in finalText ein, die 30 ist von l, der distanz
     if l < 30:
-        keybord.press(letterlist.text)
+        keyboard.press(letterlist.text)
         cv2.rectangle (img,button.pos, ((x+w,y+h),(0,255,0),cv2.FILLED))
         cv2.putText(img,button.text,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN, 4, (255,255,255),4)
         finalText += button.text
