@@ -12,7 +12,7 @@ webcamid = 0  # ist die Standard Kamera
 FinalString = ""
 
 cap = cv2.VideoCapture(webcamid)
-cap.set(2, 50)  # Für die größe der Tastertur
+cap.set(3, 1920)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
 
 #Text einlesen
@@ -98,25 +98,25 @@ while True:
 
     #Zeigen der Handumrandung
     
-    if hands:
-        for button in letterlist: 
-            x, y = button.pos
-            w, h = button.size
+    #if hands:
+     #   for button in letterlist: 
+      #      x, y = button.pos
+       #     w, h = button.size
 
-            if x < hands[8][0] < x + w and y < hands[8][1] < y + h:
-                cv2.rectangle(img, (x-5,y-5),(x+w+5, y+h+5),(175,0,175),cv2.FILLED)
-                cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                l,_,_ = detector.findDistance(8,12,img,draw=False)
-                print (l)
+            #if x < hands[8][0] < x + w and y < hands[8][1] < y + h:
+             #   cv2.rectangle(img, (x-5,y-5),(x+w+5, y+h+5),(175,0,175),cv2.FILLED)
+              #  cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+               # l,_,_ = detector.findDistance(8,12,img,draw=False)
+                #print (l)
                 # l ist zum anzeigen der Fingerweite, kan mann dann abändern um die genauigkeit zu erhöhen
 
     #clicken mit der Hand fügt buchstabe in finalText ein, die 30 ist von l, der distanz
-    if l < 30:
-        keyboard.press(letterlist.text)
-        cv2.rectangle (img,button.pos, ((x+w,y+h),(0,255,0),cv2.FILLED))
-        cv2.putText(img,button.text,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN, 4, (255,255,255),4)
-        finalText += button.text
-        sleep(0.15)
+            #if l < 30:
+             #   keyboard.press(letterlist.text)
+              #  cv2.rectangle (img,button.pos, ((x+w,y+h),(0,255,0),cv2.FILLED))
+               # cv2.putText(img,button.text,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN, 4, (255,255,255),4)
+                #finalText += button.text
+                #sleep(0.15)
    
     #Button erstellen mit opencv
     #cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
