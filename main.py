@@ -95,7 +95,7 @@ while True:
     hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
 
 
-<<<<<<< HEAD
+
     #Zeigen der Handumrandung
     
     if hands:
@@ -121,7 +121,7 @@ while True:
     #Button erstellen mit opencv
     #cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     #cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
-=======
+
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
 
@@ -139,7 +139,6 @@ while True:
         pass
 
     img = drawbuttons(img, letterlist[counterofwords])
->>>>>>> ea32af2638ef7cc08ad280b6c2d42f9b276555b8
 
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
@@ -148,15 +147,7 @@ while True:
 
     cv2.imshow("image", img)
 
-<<<<<<< HEAD
+
 
     if cv2.waitKey(5) & 0xFF == 27: #hexzahl für escape
         break
-
-
-=======
-    if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
-        break
-
-    # bis Minute 22:19 geschaut
->>>>>>> ea32af2638ef7cc08ad280b6c2d42f9b276555b8
