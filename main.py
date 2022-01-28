@@ -143,8 +143,9 @@ while True:
     img, buttons = drawbuttons(img, letterlist[counterofwords])
 
     for button in buttons:
-        print(button.pos)
-
+        x,y = button.pos
+        w,h = button.size
+        print(x, y, w, h)
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
