@@ -1,5 +1,6 @@
 from asyncio import sleep
 from cgitb import text
+from typing import Final
 import cv2
 import cvzone
 from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
@@ -17,7 +18,6 @@ cap.set(3, 1920)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
 
 #Text einlesen
-finalText = ""
 
 #um Tastatureingaben nachzuahmen
 keyboard = Controller()
@@ -102,41 +102,45 @@ while True:
     if hands: 
         lmlist = hands [0]['lmList']  
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
+        Xfinger, Yfinger = lmlist[8]
         
-        print (length)
+        #print (length)
 
         for button in buttons:
             x,y = button.pos
             w,h = button.size
             
-            if length < 40:
-                 keyboard.press(button.text)
-                 
-                 if FinalString == txtwordlist[counterofwords]:
-                     counterofwords += 1
+            if length < 60:
+                #position von der Hand mit der Position des Buttons abgleichen
+                #muss in der range x,y und w,h
 
-                 if counterofwords == len(txtwordlist) + 1:
-                     counterofwords = 0
+                    if FinalString == txtwordlist[counterofwords]:
+                         counterofwords += 1
+
+                    if counterofwords == len(txtwordlist) + 1:
+                         counterofwords = 0
 
                  #eingabe ist identisch mit lösung
-                 if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
-                     #rectangle bleibt grün
-                     cv2.rectangle(img, button.pos, (x+w,y+h),(0,255,0),cv2.FILLED)
-                     #dann wird hier das rectangle beschrieben
-                     cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                     #Buchstabe wird hinzugefügt 
-                     FinalString += button.text
-                     pass
-                 else: #eingabe ist Fehlerhaft
-                 #rectangle wird rot
-                    cv2.rectangle(img, button.pos, (x+w,y+h),(0,0,255),cv2.FILLED)
-                 #dann wird hier das rectangle beschrieben
-                    cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                    pass
-                 
-
+                    if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
+                        #rectangle bleibt grün
+                        cv2.rectangle(img, button.pos, (x+w,y+h),(0,255,0),cv2.FILLED)
+                        #dann wird hier das rectangle beschrieben
+                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                        #Buchstabe wird hinzugefügt 
+                        FinalString += button.text
+                        pass
+                    else: #eingabe ist Fehlerhaft
+                        #rectangle wird rot
+                        cv2.rectangle(img, button.pos, (x+w,y+h),(0,0,255),cv2.FILLED)
+                        #dann wird hier das rectangle beschrieben
+                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                        pass
+    
+                        
+    print (FinalString)
+    
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-       
+    print (buttons)
     for button in buttons:
         x,y = button.pos
         w,h = button.size
