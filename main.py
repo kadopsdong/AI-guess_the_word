@@ -97,55 +97,51 @@ while True:
     hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
 #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
 
-
-    #Zeigen der Handumrandung
+    # distanz der Finger wird gemessen
     
-    #if hands:
-     #   for button in letterlist: 
-      #      x, y = button.pos
-       #     w, h = button.size
+    if hands: 
+        lmlist = hands [0]['lmList']  
+        length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
+        
+        print (length)
 
-            #if x < hands[8][0] < x + w and y < hands[8][1] < y + h:
-             #   cv2.rectangle(img, (x-5,y-5),(x+w+5, y+h+5),(175,0,175),cv2.FILLED)
-              #  cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-               # l,_,_ = detector.findDistance(8,12,img,draw=False)
-                #print (l)
-                # l ist zum anzeigen der Fingerweite, kan mann dann abändern um die genauigkeit zu erhöhen
+        for button in buttons:
+            x,y = button.pos
+            w,h = button.size
+            
+            if length < 40:
+                 keyboard.press(button.text)
+                 
+                 if FinalString == txtwordlist[counterofwords]:
+                     counterofwords += 1
 
-    #clicken mit der Hand fügt buchstabe in finalText ein, die 30 ist von l, der distanz
-            #if l < 30:
-             #   keyboard.press(letterlist.text)
-              #  cv2.rectangle (img,button.pos, ((x+w,y+h),(0,255,0),cv2.FILLED))
-               # cv2.putText(img,button.text,(x+20,y+65), cv2.FONT_HERSHEY_PLAIN, 4, (255,255,255),4)
-                #finalText += button.text
-                #sleep(0.15)
-   
-    #Button erstellen mit opencv
-    #cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
-    #cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
+                 if counterofwords == len(txtwordlist) + 1:
+                     counterofwords = 0
 
-    if FinalString == txtwordlist[counterofwords]:
-        counterofwords += 1
-
-        if counterofwords == len(txtwordlist) + 1:
-            counterofwords = 0
-
-        #eingabe ist identisch mit lösung
-    if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
-        #rectangle bleibt grün
-        #dann wird hier das rectangle beschrieben
-        pass
-    else: #eingabe ist Fehlerhaft
-        #rectangle wird rot
-        #dann wird hier das rectangle beschrieben
-        pass
+                 #eingabe ist identisch mit lösung
+                 if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
+                     #rectangle bleibt grün
+                     cv2.rectangle(img, button.pos, (x+w,y+h),(0,255,0),cv2.FILLED)
+                     #dann wird hier das rectangle beschrieben
+                     cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                     #Buchstabe wird hinzugefügt 
+                     FinalString += button.text
+                     pass
+                 else: #eingabe ist Fehlerhaft
+                 #rectangle wird rot
+                    cv2.rectangle(img, button.pos, (x+w,y+h),(0,0,255),cv2.FILLED)
+                 #dann wird hier das rectangle beschrieben
+                    cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                    pass
+                 
 
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-
+       
     for button in buttons:
         x,y = button.pos
         w,h = button.size
-        print(x, y, w, h)
+       # print(x, y, w, h)
+       
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
