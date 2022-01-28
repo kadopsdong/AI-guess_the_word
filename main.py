@@ -7,6 +7,7 @@ import numpy as np
 from pynput.keyboard import Controller
 import random
 import string
+from cvzone.SelfiSegmentationModule import SelfiSegmentation
 
 webcamid = 0  # ist die Standard Kamera
 FinalString = ""
@@ -87,13 +88,14 @@ def createbuttonwith(word):
 
     return buttonlist
 
-
+#imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
+segmentor = SelfiSegmentation()
 counterofwords = 0
 while True:
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
     hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
-
+#    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
 
 
     #Zeigen der Handumrandung
