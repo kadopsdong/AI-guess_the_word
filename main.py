@@ -137,13 +137,13 @@ while True:
         # rectangle bleibt grün
         cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (70, 410), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
         cv2.rectangle(img, (100,650),(800,550), (0, 0, 255), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (70,  410), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
 
     
     # Button erstellen mit opencv
