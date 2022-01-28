@@ -110,10 +110,10 @@ while True:
             x,y = button.pos
             w,h = button.size
             
-            if length < 60:
                 #position von der Hand mit der Position des Buttons abgleichen
                 #muss in der range x,y und w,h
-
+            if x < lmlist[8][0] < x +w and y < lmlist[8][1]<y+h:
+                if length < 60:
                     if FinalString == txtwordlist[counterofwords]:
                          counterofwords += 1
 
@@ -125,7 +125,7 @@ while True:
                         #rectangle bleibt grün
                         cv2.rectangle(img, button.pos, (x+w,y+h),(0,255,0),cv2.FILLED)
                         #dann wird hier das rectangle beschrieben
-                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                        cv2.putText(img,FinalString,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
                         #Buchstabe wird hinzugefügt 
                         FinalString += button.text
                         pass
@@ -133,18 +133,15 @@ while True:
                         #rectangle wird rot
                         cv2.rectangle(img, button.pos, (x+w,y+h),(0,0,255),cv2.FILLED)
                         #dann wird hier das rectangle beschrieben
-                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
+                        cv2.putText(img,FinalString,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
                         pass
     
                         
     print (FinalString)
     
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-    print (buttons)
-    for button in buttons:
-        x,y = button.pos
-        w,h = button.size
-       # print(x, y, w, h)
+    print (button)
+  
        
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
