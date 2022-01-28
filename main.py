@@ -123,9 +123,9 @@ while True:
                 if x<Xfinger <x+w and y<Yfinger<y+h:
 
                     FinalString += button.text  
-                    sleep(3)
+                   
 
-
+    sleep(1)
 
 
     print(FinalString)
@@ -135,17 +135,17 @@ while True:
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        cv2.rectangle(img, (50,300),(700,450),  (0, 255, 0), cv2.FILLED) #ASTRID
+        cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (70, 410), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
-        cv2.rectangle(img, (50,300),(700,450), (0, 0, 255), cv2.FILLED) #ASTRID
+        cv2.rectangle(img, (100,650),(800,550), (0, 0, 255), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (70,  410), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
 
-
+    
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
