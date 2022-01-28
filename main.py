@@ -17,9 +17,9 @@ cap = cv2.VideoCapture(webcamid)
 cap.set(3, 1920)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
 
-#Text einlesen
+# Text einlesen
 
-#um Tastatureingaben nachzuahmen
+# um Tastatureingaben nachzuahmen
 keyboard = Controller()
 
 # setup text
@@ -88,72 +88,70 @@ def createbuttonwith(word):
 
     return buttonlist
 
-#imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
+
+# imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 segmentor = SelfiSegmentation()
 counterofwords = 0
 while True:
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
     hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
-#    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
+    #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
+
+    if FinalString == txtwordlist[counterofwords]:
+        counterofwords += 1
+
+    if counterofwords == len(txtwordlist) + 1:
+        counterofwords = 0
 
     # distanz der Finger wird gemessen
-    
-    if hands: 
-        lmlist = hands [0]['lmList']  
+
+    if hands:
+        lmlist = hands[0]['lmList']
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
-        
-        #print (length)
 
+        # print (length)
+
+        ##
         for button in buttons:
-            x,y = button.pos
-            w,h = button.size
-            
+            x, y = button.pos
+            w, h = button.size
+
             if length < 60:
-                #position von der Hand mit der Position des Buttons abgleichen
-                #muss in der range x,y und w,h
+                # position von der Hand mit der Position des Buttons abgleichen
+                # muss in der range x,y und w,h
 
-                    if FinalString == txtwordlist[counterofwords]:
-                         counterofwords += 1
 
-                    if counterofwords == len(txtwordlist) + 1:
-                         counterofwords = 0
 
-                 #eingabe ist identisch mit lösung
-                    if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
-                        #rectangle bleibt grün
-                        cv2.rectangle(img, button.pos, (x+w,y+h),(0,255,0),cv2.FILLED)
-                        #dann wird hier das rectangle beschrieben
-                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                        #Buchstabe wird hinzugefügt 
-                        FinalString += button.text
-                        pass
-                    else: #eingabe ist Fehlerhaft
-                        #rectangle wird rot
-                        cv2.rectangle(img, button.pos, (x+w,y+h),(0,0,255),cv2.FILLED)
-                        #dann wird hier das rectangle beschrieben
-                        cv2.putText(img,button.text,(x+20,y+65),cv2.FONT_HERSHEY_PLAIN,4,(255,255,255),4)
-                        pass
-    
-                        
-    print (FinalString)
-    
+
+
+    print(FinalString)
+
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-    print (buttons)
-    for button in buttons:
-        x,y = button.pos
-        w,h = button.size
-       # print(x, y, w, h)
-       
+
+    # eingabe ist identisch mit lösung
+    if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
+        # rectangle bleibt grün
+        cv2.rectangle(img, button.pos, (x + w, y + h), (0, 255, 0), cv2.FILLED) #ASTRID
+        # dann wird hier das rectangle beschrieben
+        cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        # Buchstabe wird hinzugefügt
+        FinalString += button.text
+        pass
+    else:  # eingabe ist Fehlerhaft
+        # rectangle wird rot
+        cv2.rectangle(img, button.pos, (x + w, y + h), (0, 0, 255), cv2.FILLED) #ASTRID
+        # dann wird hier das rectangle beschrieben
+        cv2.putText(img, button.text, (x + 20, y + 65), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        pass
+
+
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
 
-
     cv2.imshow("image", img)
 
-
-
-    if cv2.waitKey(5) & 0xFF == 27: #hexzahl für escape
+    if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
         break
