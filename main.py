@@ -61,6 +61,7 @@ class Button():
 def drawbuttons(img, word):
     buttonlisttodraw = createbuttonwith(word)
 
+    
     for button in buttonlisttodraw:
         x, y = button.pos  # Positon
         w, h = button.size  # Größe
@@ -86,14 +87,14 @@ def createbuttonwith(word):
         if 15 > i >= 10:
             buttonlist.append(Button([x * (i - 10), y * 3], buchstabe))
 
+       
     return buttonlist
 
-
-# def drawdelButton():
-
-#   cv2.rectangle(img,(0,875),(0,90),(255,0,255),cv2.FILLED)
-#  cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
-# return
+#def drawdelButton(): 
+   
+ #   cv2.rectangle(img,(0,875),(0,90),(255,0,255),cv2.FILLED)
+  #  cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
+   # return
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -107,7 +108,6 @@ while True:
 
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
-        FinalString = ""
 
     if counterofwords == len(txtwordlist) + 1:
         counterofwords = 0
@@ -128,34 +128,35 @@ while True:
             if length < 60:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
-                if x < Xfinger < x + w and y < Yfinger < y + h:
-                    FinalString += button.text
+                if x<Xfinger <x+w and y<Yfinger<y+h:
+
+                    FinalString += button.text  
+                   
 
     sleep(1)
+
 
     print(FinalString)
 
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-    # drawdelButton() #button zum löschen wir hier mitgezeichnet
+   # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        cv2.rectangle(img, (100, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
+        cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
-                    4)  # ASTRID Finalstring muss ausgegeben werden
+        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         sleep(30)
 
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
-        cv2.rectangle(img, (100, 650), (800, 550), (0, 0, 255), cv2.FILLED)  # ASTRID
+        cv2.rectangle(img, (100,650),(800,550), (0, 0, 255), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
-                    4)  # ASTRID Finalstring muss ausgegeben werden
-        sleep(30)
-        # lezter Buchstabe wird verworfen
+        cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        sleep (30)
+        #lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
-
+    
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
