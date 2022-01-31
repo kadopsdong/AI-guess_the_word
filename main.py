@@ -17,6 +17,13 @@ cap = cv2.VideoCapture(webcamid)
 cap.set(3, 1920)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
 
+
+#Postition für Skipbutton
+xskip = 0
+yskip = 0
+wskip = 0
+hskip = 0
+
 # Text einlesen
 
 # um Tastatureingaben nachzuahmen
@@ -108,6 +115,7 @@ while True:
 
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
+        FinalString = ""
 
     if counterofwords == len(txtwordlist) + 1:
         counterofwords = 0
@@ -130,8 +138,18 @@ while True:
                 # muss in der range x,y und w,h
                 if x<Xfinger <x+w and y<Yfinger<y+h:
 
-                    FinalString += button.text  
-                   
+                    FinalString += button.text
+
+                #Es wird das wort geskippt
+                if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
+                   counterofwords +=1
+
+                   if FinalString == txtwordlist[counterofwords]:
+                       counterofwords += 1
+                       FinalString = ""
+
+                   if counterofwords == len(txtwordlist) + 1:
+                       counterofwords = 0
 
     sleep(1)
 
@@ -162,6 +180,11 @@ while True:
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
 
     cv2.imshow("image", img)
+
+    # Skip word button
+    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (0, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
+        # dann wird hier das rectangle beschrieben
+        cv2.putText(img, "Skip", (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
         break
