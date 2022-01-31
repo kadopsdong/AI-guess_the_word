@@ -20,9 +20,9 @@ cap.set(4, 1080)  # HD Auflösung
 
 #Postition für Skipbutton
 xskip = 0
-yskip = 0
-wskip = 0
-hskip = 0
+yskip = 400
+wskip = 185
+hskip = 85
 
 # Text einlesen
 
@@ -71,7 +71,7 @@ def drawbuttons(img, word):
     
     for button in buttonlisttodraw:
         x, y = button.pos  # Positon
-        w, h = button.size  # Größe
+        w, h = button.size  # Größe startet bei 85,85
         cv2.rectangle(img, button.pos, (x + w, y + h), (255, 0, 255), cv2.FILLED)  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
@@ -97,11 +97,11 @@ def createbuttonwith(word):
        
     return buttonlist
 
-def drawdelButton(): 
+#def drawdelButton(): 
    #rectangle (imgage(x-Koordinate,Y-Koordinate vom oberen linken eck),(x-Koordinate,y-Koordinate vom unteren rechten eck), Farbe, dicke)
-    cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
-    cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
-    return
+   # cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
+ #   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
+  #  return
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -157,7 +157,7 @@ while True:
     print(FinalString)
 
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-    drawdelButton() #button zum löschen wir hier mitgezeichnet
+    #drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
@@ -178,13 +178,15 @@ while True:
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
-
+    
+    # Skip word button
+    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
+        # dann wird hier das rectangle beschrieben
+    cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+   
     cv2.imshow("image", img)
 
-    # Skip word button
-    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (0, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
-        # dann wird hier das rectangle beschrieben
-        cv2.putText(img, "Skip", (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+   
 
     if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
         break
