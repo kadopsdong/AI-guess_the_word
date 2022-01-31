@@ -150,10 +150,15 @@ while True:
                 # muss in der range x,y und w,h
                 if x<Xfinger <x+w and y<Yfinger<y+h:
                     
-                    if click == True:
-                        FinalString += button.text
-                        buttons.pop(i) #Button wird geloescht
-                        click = False
+                    #click= False
+                    cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (175, 0, 175), cv2.FILLED)
+                    #if click == True:
+                    FinalString += button.text
+                    Punkte = Punkte +10
+                    sleep (10)
+                    
+                        #buttons.pop(i) #Button wird geloescht
+                     #   click = False
                     
                     
                     
@@ -209,7 +214,7 @@ while True:
     used = time.time()
     used_time = used - start_time
     used_time= format(used_time,".1f")
-    print(used_time)
+    #print(used_time)
 
     cv2.rectangle(img, (10 , 10), (10 + 330, 10 + 50),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
         # dann wird hier das rectangle beschrieben
