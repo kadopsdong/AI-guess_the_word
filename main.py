@@ -189,6 +189,7 @@ while True:
     #Timer button
     used = time.time()
     used_time = used - start_time
+    used_time= format(used_time,".2f")
     print(used_time)
 
 
