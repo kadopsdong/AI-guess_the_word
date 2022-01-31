@@ -141,7 +141,7 @@ while True:
 
         # print (length)
 
-        for button in buttons:
+        for i,button in enumerate(buttons):
             x, y = button.pos
             w, h = button.size
 
@@ -151,6 +151,7 @@ while True:
                 if x<Xfinger <x+w and y<Yfinger<y+h:
 
                     FinalString += button.text
+                    buttons.pop(i)
 
                 #Es wird das wort geskippt
                 if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
