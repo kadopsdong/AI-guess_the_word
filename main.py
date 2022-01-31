@@ -90,11 +90,11 @@ def createbuttonwith(word):
        
     return buttonlist
 
-#def drawdelButton(): 
-   
- #   cv2.rectangle(img,(0,875),(0,90),(255,0,255),cv2.FILLED)
-  #  cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
-   # return
+def drawdelButton(): 
+   #rectangle (imgage(x-Koordinate,Y-Koordinate vom oberen linken eck),(x-Koordinate,y-Koordinate vom unteren rechten eck), Farbe, dicke)
+    cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
+    cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
+    return
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -139,7 +139,7 @@ while True:
     print(FinalString)
 
     img, buttons = drawbuttons(img, letterlist[counterofwords])
-   # drawdelButton() #button zum löschen wir hier mitgezeichnet
+    drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
