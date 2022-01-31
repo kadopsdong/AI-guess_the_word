@@ -25,7 +25,14 @@ yskip = 400
 wskip = 185
 hskip = 85
 
-# Text einlesen
+
+
+# Position Scoreboard
+xscore = 900
+yscore = 15
+wscore = 350
+hscore = 85 
+Punkte = 0
 
 # um Tastatureingaben nachzuahmen
 keyboard = Controller()
@@ -153,6 +160,7 @@ while True:
                    if FinalString == txtwordlist[counterofwords]:
                        counterofwords += 1
                        FinalString = ""
+                       Punkte = 0
 
                    if counterofwords == len(txtwordlist) + 1:
                        counterofwords = 0
@@ -171,13 +179,15 @@ while True:
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         sleep(30)
+        # IF ABFRAGE MUSS NOCH GEMACHT WERDEN Punkte = Punkte +10
 
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
         cv2.rectangle(img, (100,650),(800,550), (0, 0, 255), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
-        sleep (30)
+        Punkte = Punkte - 1
+        sleep (50)
         #lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
     
@@ -199,6 +209,11 @@ while True:
     cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
         # dann wird hier das rectangle beschrieben
     cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+
+    # Score button
+    cv2.rectangle(img, (xscore , yscore), (xscore + wscore, yscore + hscore),  (0, 0, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
+        # dann wird hier das rectangle beschrieben
+    cv2.putText(img, "Score: " + str(Punkte) , (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
    
     cv2.imshow("image", img)
 
