@@ -156,7 +156,7 @@ while True:
                 #Es wird das wort geskippt
                 if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
                    counterofwords +=1
-                   sleep(2.0)
+                   sleep(2)
                    FinalString = ""
                    start_time = time.time()
 
