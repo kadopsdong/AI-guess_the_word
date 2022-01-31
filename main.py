@@ -202,8 +202,9 @@ while True:
     used_time= format(used_time,".2f")
     print(used_time)
 
-
-
+    cv2.rectangle(img, (10 , 10), (10 + 330, 10 + 50),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
+        # dann wird hier das rectangle beschrieben
+    cv2.putText(img, "Zeit:" +str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Skip word button
     cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
