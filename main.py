@@ -151,16 +151,16 @@ while True:
                 if x<Xfinger <x+w and y<Yfinger<y+h:
 
                     FinalString += button.text
-                    buttons.pop(i)
+                    buttons.pop(i) #Button wird geloescht
 
                 #Es wird das wort geskippt
                 if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
                    counterofwords +=1
+                   sleep(2.0)
+                   FinalString = ""
                    start_time = time.time()
 
                    if FinalString == txtwordlist[counterofwords]:
-                       counterofwords += 1
-                       FinalString = ""
                        Punkte = 0
 
                    if counterofwords == len(txtwordlist) + 1:
