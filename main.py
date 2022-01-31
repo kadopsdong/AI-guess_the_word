@@ -9,6 +9,7 @@ from pynput.keyboard import Controller
 import random
 import string
 from cvzone.SelfiSegmentationModule import SelfiSegmentation
+import time
 
 webcamid = 0  # ist die Standard Kamera
 FinalString = ""
@@ -114,6 +115,8 @@ def createbuttonwith(word):
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 segmentor = SelfiSegmentation()
 counterofwords = 0
+
+start_time = time.time()
 while True:
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
@@ -123,9 +126,11 @@ while True:
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
         FinalString = ""
+        start_time = time.time()
 
     if counterofwords == len(txtwordlist) + 1:
         counterofwords = 0
+        start_time = time.time()
 
     # distanz der Finger wird gemessen
 
@@ -150,6 +155,7 @@ while True:
                 #Es wird das wort geskippt
                 if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
                    counterofwords +=1
+                   start_time = time.time()
 
                    if FinalString == txtwordlist[counterofwords]:
                        counterofwords += 1
@@ -188,7 +194,16 @@ while True:
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
-    
+
+
+    #Timer button
+    used = time.time()
+    used_time = used - start_time
+    print(used_time)
+
+
+
+
     # Skip word button
     cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
         # dann wird hier das rectangle beschrieben
