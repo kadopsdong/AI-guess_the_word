@@ -179,7 +179,7 @@ while True:
         cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
-        sleep(30)
+        sleep(150)
         # IF ABFRAGE MUSS NOCH GEMACHT WERDEN Punkte = Punkte +10
 
     else:  # eingabe ist Fehlerhaft
@@ -188,7 +188,7 @@ while True:
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-        sleep (50)
+        sleep (150)
         #lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
     
@@ -200,7 +200,7 @@ while True:
     #Timer button
     used = time.time()
     used_time = used - start_time
-    used_time= format(used_time,".2f")
+    used_time= format(used_time,".1f")
     print(used_time)
 
     cv2.rectangle(img, (10 , 10), (10 + 330, 10 + 50),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
