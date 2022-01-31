@@ -149,9 +149,16 @@ while True:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
                 if x<Xfinger <x+w and y<Yfinger<y+h:
-
-                    FinalString += button.text
-                    buttons.pop(i) #Button wird geloescht
+                    
+                    if click == True:
+                        FinalString += button.text
+                        buttons.pop(i) #Button wird geloescht
+                        click = False
+                    
+                    
+                    
+                else:
+                    click = True
 
                 #Es wird das wort geskippt
                 if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
@@ -159,6 +166,7 @@ while True:
                    sleep(2)
                    FinalString = ""
                    start_time = time.time()
+                   Punkte = 0
 
                    if FinalString == txtwordlist[counterofwords]:
                        Punkte = 0
@@ -179,7 +187,7 @@ while True:
         cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
-        sleep(150)
+       
         # IF ABFRAGE MUSS NOCH GEMACHT WERDEN Punkte = Punkte +10
 
     else:  # eingabe ist Fehlerhaft
@@ -188,7 +196,7 @@ while True:
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-        sleep (150)
+        
         #lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
     
@@ -215,7 +223,7 @@ while True:
     # Score button
     cv2.rectangle(img, (xscore , yscore), (xscore + wscore, yscore + hscore),  (0, 0, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
         # dann wird hier das rectangle beschrieben
-    cv2.putText(img, "Score: " + str(Punkte) , (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    cv2.putText(img, "Score:" + str(Punkte) , (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
    
     cv2.imshow("image", img)
 
