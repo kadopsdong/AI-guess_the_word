@@ -80,7 +80,7 @@ def drawbuttons(img, word):
     for button in buttonlisttodraw:
         x, y = button.pos  # Positon
         w, h = button.size  # Größe startet bei 85,85
-        cv2.rectangle(img, button.pos, (x + w, y + h), (255, 0, 255), cv2.FILLED)  # Koordinaten + Farben
+        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
 
@@ -127,11 +127,12 @@ while True:
         counterofwords += 1
         FinalString = ""
         start_time = time.time()
+        Punkte = 0
 
     if counterofwords == len(txtwordlist) + 1:
         counterofwords = 0
         start_time = time.time()
-
+        
     # distanz der Finger wird gemessen
 
     if hands:
@@ -151,10 +152,9 @@ while True:
                 if x<Xfinger <x+w and y<Yfinger<y+h:
                     
                     #click= False
-                    cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (175, 0, 175), cv2.FILLED)
+                    cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
                     #if click == True:
                     FinalString += button.text
-                    Punkte = Punkte +10
                     sleep (10)
                     
                         #buttons.pop(i) #Button wird geloescht
@@ -189,7 +189,7 @@ while True:
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        cv2.rectangle(img, (100,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
+        cv2.rectangle(img, (75,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
        
@@ -221,7 +221,7 @@ while True:
     cv2.putText(img, "Zeit:" +str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Skip word button
-    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
+    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (175, 175, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
         # dann wird hier das rectangle beschrieben
     cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
