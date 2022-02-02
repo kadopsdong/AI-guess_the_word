@@ -118,7 +118,8 @@ while True:
     flanke = False
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
-    hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
+    img = cv2.flip(img,1)
+    hands, img = detector.findHands(img, draw=True, flipType=False)  # Gibt die Position der Hände zurück
     #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
 
     if FinalString == txtwordlist[counterofwords]:
@@ -167,12 +168,8 @@ while True:
                     #   click = False
 
 
-
-                else:
-                    click = True
-
                 # Es wird das wort geskippt
-                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip:
+                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
                     counterofwords += 1
                     sleep(2)
                     FinalString = ""
