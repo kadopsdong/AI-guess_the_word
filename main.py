@@ -1,6 +1,5 @@
 from asyncio import sleep
 from cgitb import text
-from tkinter import VERTICAL
 from typing import Final
 import cv2
 import cvzone
@@ -19,20 +18,17 @@ cap = cv2.VideoCapture(webcamid)
 cap.set(3, 1920)  # Für die größe der Tastertur
 cap.set(4, 1080)  # HD Auflösung
 
-
-#Postition für Skipbutton
+# Postition für Skipbutton
 xskip = 0
 yskip = 400
 wskip = 185
 hskip = 85
 
-
-
 # Position Scoreboard
 xscore = 900
 yscore = 15
 wscore = 350
-hscore = 85 
+hscore = 85
 Punkte = 0
 
 # um Tastatureingaben nachzuahmen
@@ -77,7 +73,6 @@ class Button():
 def drawbuttons(img, word):
     buttonlisttodraw = createbuttonwith(word)
 
-    
     for button in buttonlisttodraw:
         x, y = button.pos  # Positon
         w, h = button.size  # Größe startet bei 85,85
@@ -103,14 +98,14 @@ def createbuttonwith(word):
         if 15 > i >= 10:
             buttonlist.append(Button([x * (i - 10), y * 3], buchstabe))
 
-       
     return buttonlist
 
-#def drawdelButton(): 
-   #rectangle (imgage(x-Koordinate,Y-Koordinate vom oberen linken eck),(x-Koordinate,y-Koordinate vom unteren rechten eck), Farbe, dicke)
-   # cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
- #   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
-  #  return
+
+# def drawdelButton():
+# rectangle (imgage(x-Koordinate,Y-Koordinate vom oberen linken eck),(x-Koordinate,y-Koordinate vom unteren rechten eck), Farbe, dicke)
+# cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
+#   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
+#  return
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -118,127 +113,129 @@ segmentor = SelfiSegmentation()
 counterofwords = 0
 
 start_time = time.time()
+closed = False
 while True:
-    click = False
+
+    flanke = False
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
-    
-    flipHorizontal = cv2.flip(img, 1)
-
+    img = cv2.flip(img,1)
     hands, img = detector.findHands(img, draw=True, flipType=False)  # Gibt die Position der Hände zurück
     #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
-    #cv2.flip(img,1)
 
+    #Wenn wort erkannt wurde
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
         FinalString = ""
         start_time = time.time()
-        Punkte = 0
+        Punkte += 10
 
     if counterofwords == len(txtwordlist) + 1:
         counterofwords = 0
         start_time = time.time()
-        
+
     # distanz der Finger wird gemessen
 
     if hands:
         lmlist = hands[0]['lmList']
-        length, _, flipHorizontal = detector.findDistance(lmlist[8], lmlist[12], flipHorizontal)
+        length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
 
-        # print (length)
+        if length > 40 and closed == True:
+            flanke = False
+            closed = False
+           # print("!FLANKE")
 
-        for i,button in enumerate(buttons):
+        if length < 40 and closed == False:
+            flanke = True
+            print(flanke)
+            closed = True
+
+        for i, button in enumerate(buttons):
             x, y = button.pos
             w, h = button.size
 
-            if length < 50:
+            if length < 60:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
-                if x<Xfinger <x+w and y<Yfinger<y+h:
-                    
-                    #click= False
+                if x < Xfinger < x + w and y < Yfinger < y + h and flanke==True:
+
+                    # click= False
                     cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
-                    #if click == True:
+                    # if click == True:
                     FinalString += button.text
-                    #sleep(30)
-                        #buttons.pop(i) #Button wird geloescht
-                    click = True
-                    
-                    
-                    
-                else:
-                    click = True
+                    sleep(10)
 
-                #Es wird das wort geskippt
-                if xskip<Xfinger <xskip+wskip and yskip<Yfinger<yskip+hskip:
-                   counterofwords +=1
-                   sleep(2)
-                   FinalString = ""
-                   start_time = time.time()
-                   Punkte = 0
+                    # buttons.pop(i) #Button wird geloescht
+                    #   click = False
 
-                   if FinalString == txtwordlist[counterofwords]:
-                       Punkte = 0
 
-                   if counterofwords == len(txtwordlist) + 1:
-                       counterofwords = 0
+                # Es wird das wort geskippt
+                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
+                    counterofwords += 1
+                    FinalString = ""
+                    start_time = time.time()
+                    Punkte -= 15
+
+                    if counterofwords == len(txtwordlist) + 1:
+                        counterofwords = 0
 
     sleep(1)
 
-
     print(FinalString)
 
-    img, buttons = drawbuttons(flipHorizontal, letterlist[counterofwords])
-    #drawdelButton() #button zum löschen wir hier mitgezeichnet
+    img, buttons = drawbuttons(img, letterlist[counterofwords])
+    # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        cv2.rectangle(img, (75,650),(800,550),  (0, 175, 0), cv2.FILLED) #ASTRID
+        #wenn buchstabe richtig
+        if flanke==True:
+            Punkte +=1
+        
+        cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
-       
-        # IF ABFRAGE MUSS NOCH GEMACHT WERDEN Punkte = Punkte +10
+        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
+                    4)  # ASTRID Finalstring muss ausgegeben werden
 
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
-        cv2.rectangle(img, (100,650),(800,550), (0, 0, 255), cv2.FILLED) #ASTRID
+        cv2.rectangle(img, (100, 650), (800, 550), (0, 0, 255), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87,  645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
+        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
+                    4)  # ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-        
-        #lezter Buchstabe wird verworfen
+
+        # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
-    
+
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
 
-
-    #Timer button
+    # Timer button
     used = time.time()
     used_time = used - start_time
-    used_time= format(used_time,".1f")
-    #print(used_time)
+    used_time = format(used_time, ".1f")
+    # print(used_time)
 
-    cv2.rectangle(img, (10 , 10), (10 + 330, 10 + 50),  (255, 255, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
-        # dann wird hier das rectangle beschrieben
-    cv2.putText(img, "Zeit:" +str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    cv2.rectangle(img, (10, 10), (10 + 330, 10 + 50), (255, 255, 0), cv2.FILLED)  # ASTRID bitte position hinzufuegen
+    # dann wird hier das rectangle beschrieben
+    cv2.putText(img, "Zeit:" + str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Skip word button
-    cv2.rectangle(img, (xskip , yskip), (xskip + wskip, yskip + hskip),  (175, 175, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
-        # dann wird hier das rectangle beschrieben
+    cv2.rectangle(img, (xskip, yskip), (xskip + wskip, yskip + hskip), (175, 175, 0),
+                  cv2.FILLED)  # ASTRID bitte position hinzufuegen
+    # dann wird hier das rectangle beschrieben
     cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Score button
-    cv2.rectangle(img, (xscore , yscore), (xscore + wscore, yscore + hscore),  (0, 0, 0), cv2.FILLED) #ASTRID bitte position hinzufuegen
-        # dann wird hier das rectangle beschrieben
-    cv2.putText(img, "Score:" + str(Punkte) , (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
-   
-   # img = cv2.flip(img,1)
-    cv2.imshow("image", img)
+    cv2.rectangle(img, (xscore, yscore), (xscore + wscore, yscore + hscore), (0, 0, 0),
+                  cv2.FILLED)  # ASTRID bitte position hinzufuegen
+    # dann wird hier das rectangle beschrieben
+    cv2.putText(img, "Score:" + str(Punkte), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
-   
+    cv2.imshow("image", img)
 
     if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
         break
