@@ -182,16 +182,16 @@ while True:
     sleep(1)
 
     print(FinalString)
-
+    durchgang = 0
     img, buttons = drawbuttons(img, letterlist[counterofwords])
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
         #wenn buchstabe richtig
-        if flanke==True:
+        if flanke==True and durchgang >0:
             Punkte +=1
-        
+        durchgang +=1
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
@@ -204,10 +204,11 @@ while True:
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
                     4)  # ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-
+        durchgang +=1
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
+    
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
