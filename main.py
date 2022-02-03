@@ -171,13 +171,9 @@ while True:
                 # Es wird das wort geskippt
                 if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
                     counterofwords += 1
-                    sleep(2)
                     FinalString = ""
                     start_time = time.time()
                     Punkte = 0
-
-                    if FinalString == txtwordlist[counterofwords]:
-                        Punkte = 0
 
                     if counterofwords == len(txtwordlist) + 1:
                         counterofwords = 0
