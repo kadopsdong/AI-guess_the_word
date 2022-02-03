@@ -115,7 +115,10 @@ counterofwords = 0
 start_time = time.time()
 closed = False
 while True:
+<<<<<<< HEAD
 
+=======
+>>>>>>> fc277a44874cccf016dcdf4bf04db4809f134bd7
     flanke = False
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
@@ -165,6 +168,7 @@ while True:
                     # if click == True:
                     FinalString += button.text
                     sleep(10)
+<<<<<<< HEAD
 
                     # buttons.pop(i) #Button wird geloescht
                     #   click = False
@@ -177,6 +181,20 @@ while True:
                     start_time = time.time()
                     Punkte -= 15
 
+=======
+
+                    # buttons.pop(i) #Button wird geloescht
+                    #   click = False
+
+
+                # Es wird das wort geskippt
+                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
+                    counterofwords += 1
+                    FinalString = ""
+                    start_time = time.time()
+                    Punkte = 0
+
+>>>>>>> fc277a44874cccf016dcdf4bf04db4809f134bd7
                     if counterofwords == len(txtwordlist) + 1:
                         counterofwords = 0
 
@@ -189,14 +207,22 @@ while True:
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
+<<<<<<< HEAD
         #wenn buchstabe richtig
         if flanke==True:
             Punkte +=1
         
+=======
+>>>>>>> fc277a44874cccf016dcdf4bf04db4809f134bd7
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
                     4)  # ASTRID Finalstring muss ausgegeben werden
+<<<<<<< HEAD
+=======
+
+        # IF ABFRAGE MUSS NOCH GEMACHT WERDEN Punkte = Punkte +10
+>>>>>>> fc277a44874cccf016dcdf4bf04db4809f134bd7
 
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
