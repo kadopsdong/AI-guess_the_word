@@ -174,7 +174,7 @@ while True:
                     counterofwords += 1
                     FinalString = ""
                     start_time = time.time()
-                    Punkte -= 15
+                    Punkte = Punkte - 15
 
                     if counterofwords == len(txtwordlist) + 1:
                         counterofwords = 0
@@ -189,9 +189,9 @@ while True:
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
         #wenn buchstabe richtig
-        if flanke==True and durchgang >0:
+        if flanke==True:
             Punkte +=1
-        durchgang +=1
+        
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
@@ -204,7 +204,7 @@ while True:
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
                     4)  # ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-        durchgang +=1
+        
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
