@@ -1,5 +1,6 @@
 from asyncio import sleep
 from cgitb import text
+from tkinter import VERTICAL
 from typing import Final
 import cv2
 import cvzone
@@ -118,10 +119,15 @@ counterofwords = 0
 
 start_time = time.time()
 while True:
+    click = False
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
-    hands, img = detector.findHands(img, draw=True, flipType=True)  # Gibt die Position der Hände zurück
+    
+    flipHorizontal = cv2.flip(img, 1)
+
+    hands, img = detector.findHands(img, draw=True, flipType=False)  # Gibt die Position der Hände zurück
     #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
+    #cv2.flip(img,1)
 
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
@@ -137,7 +143,7 @@ while True:
 
     if hands:
         lmlist = hands[0]['lmList']
-        length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
+        length, _, flipHorizontal = detector.findDistance(lmlist[8], lmlist[12], flipHorizontal)
         Xfinger, Yfinger = lmlist[8]
 
         # print (length)
@@ -146,7 +152,7 @@ while True:
             x, y = button.pos
             w, h = button.size
 
-            if length < 60:
+            if length < 50:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
                 if x<Xfinger <x+w and y<Yfinger<y+h:
@@ -155,10 +161,9 @@ while True:
                     cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
                     #if click == True:
                     FinalString += button.text
-                    sleep (10)
-                    
+                    #sleep(30)
                         #buttons.pop(i) #Button wird geloescht
-                     #   click = False
+                    click = True
                     
                     
                     
@@ -184,12 +189,12 @@ while True:
 
     print(FinalString)
 
-    img, buttons = drawbuttons(img, letterlist[counterofwords])
+    img, buttons = drawbuttons(flipHorizontal, letterlist[counterofwords])
     #drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        cv2.rectangle(img, (75,650),(800,550),  (0, 255, 0), cv2.FILLED) #ASTRID
+        cv2.rectangle(img, (75,650),(800,550),  (0, 175, 0), cv2.FILLED) #ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4) #ASTRID Finalstring muss ausgegeben werden
        
@@ -230,6 +235,7 @@ while True:
         # dann wird hier das rectangle beschrieben
     cv2.putText(img, "Score:" + str(Punkte) , (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
    
+   # img = cv2.flip(img,1)
     cv2.imshow("image", img)
 
    
