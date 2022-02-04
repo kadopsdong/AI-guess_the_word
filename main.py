@@ -11,6 +11,7 @@ import string
 from cvzone.SelfiSegmentationModule import SelfiSegmentation
 import time
 
+
 webcamid = 0  # ist die Standard Kamera
 FinalString = ""
 
@@ -118,18 +119,18 @@ while True:
     flanke = False
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
-    img = cv2.flip(img,1)
+    img = cv2.flip(img, 1)
     hands, img = detector.findHands(img, draw=True, flipType=False)  # Gibt die Position der Hände zurück
     #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
 
-    #Wenn wort erkannt wurde
+    # Wenn wort erkannt wurde
     if FinalString == txtwordlist[counterofwords]:
         counterofwords += 1
         FinalString = ""
         start_time = time.time()
         Punkte += 10
 
-    if counterofwords == len(txtwordlist) + 1:
+    if counterofwords == len(txtwordlist):
         counterofwords = 0
         start_time = time.time()
 
@@ -143,7 +144,7 @@ while True:
         if length > 40 and closed == True:
             flanke = False
             closed = False
-           # print("!FLANKE")
+        # print("!FLANKE")
 
         if length < 40 and closed == False:
             flanke = True
@@ -157,8 +158,7 @@ while True:
             if length < 60:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
-                if x < Xfinger < x + w and y < Yfinger < y + h and flanke==True:
-
+                if x < Xfinger < x + w and y < Yfinger < y + h and flanke == True:
                     # click= False
                     cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
                     # if click == True:
@@ -171,7 +171,7 @@ while True:
                 print(len(txtwordlist))
 
                 # Es wird das wort geskippt
-                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
+                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke == True:
                     counterofwords += 1
                     FinalString = ""
                     start_time = time.time()
@@ -189,10 +189,10 @@ while True:
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
         # rectangle bleibt grün
-        #wenn buchstabe richtig
-        if flanke==True:
-            Punkte +=1
-        
+        # wenn buchstabe richtig
+        if flanke == True:
+            Punkte += 1
+
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
@@ -205,11 +205,10 @@ while True:
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
                     4)  # ASTRID Finalstring muss ausgegeben werden
         Punkte = Punkte - 1
-        
+
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
-    
     # Button erstellen mit opencv
     # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
     # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
