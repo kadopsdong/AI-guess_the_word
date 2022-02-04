@@ -106,10 +106,10 @@ def drawbuttons(img, word):
     for button in buttonlisttodraw:
         x, y = button.pos  # Positon
         w, h = button.size  # Größe startet bei 85,85
-        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)  # Koordinaten + Farben
+        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175))  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
-       # cv2.addWeighted(frame, 0.4, frame_cpy, 1 - alpha, gamma=0)
+
 
     return img, buttonlisttodraw
 
