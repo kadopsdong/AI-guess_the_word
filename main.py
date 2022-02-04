@@ -109,7 +109,6 @@ def drawbuttons(img, word):
         cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
-
     return img, buttonlisttodraw
 
 
@@ -130,6 +129,7 @@ def createbuttonwith(word):
 
     return buttonlist
 
+
 def createStaticOuputGUI():
     # Timer button
     cv2.rectangle(img, (10, 10), (10 + 330, 10 + 50), (255, 255, 0), cv2.FILLED)  # ASTRID bitte position hinzufuegen
@@ -146,11 +146,7 @@ def createStaticOuputGUI():
     return cv2
 
 
-# def drawdelButton():
-# rectangle (imgage(x-Koordinate,Y-Koordinate vom oberen linken eck),(x-Koordinate,y-Koordinate vom unteren rechten eck), Farbe, dicke)
-# cv2.rectangle(img,(5,600),(250,650),(255,0,255),cv2.FILLED)
-#   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
-#  return
+
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -186,7 +182,6 @@ while True:
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
 
-
         if length > 40 and closed == True:
             flanke = False
             closed = False
@@ -210,33 +205,30 @@ while True:
                     # if click == True:
                     FinalString += button.text
                     points += 1
-                    sleep(10)
-
-                    # buttons.pop(i) #Button wird geloescht
-                    #   click = False
-
-                print(len(txtwordlist))
 
                 # Es wird das wort geskippt
                 if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
                     counterOfWords += 1
                     FinalString = ""
-                    start_time = time.time()
                     points = points - 15
+                    start_time = time.time()
+                    print(points)
 
                     if counterOfWords == len(txtwordlist):
                         counterOfWords = 0
+                    else:
+                        break
 
-    sleep(1)
+
 
     print(FinalString)
     durchgang = 0
-    
+
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
         # rectangle bleibt grün
-        # wenn buchstabe richtig           
+        # wenn buchstabe richtig
 
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
@@ -262,23 +254,7 @@ while True:
     used = time.time()
     used_time = used - start_time
     used_time = format(used_time, ".1f")
-    # print(used_time)
 
-  #cv2.rectangle(img, (10, 10), (10 + 330, 10 + 50), (255, 255, 0), cv2.FILLED)  # ASTRID bitte position hinzufuegen
-    # dann wird hier das rectangle beschrieben
-   # cv2.putText(img, "Zeit:" + str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
-
-    # Skip word button
-    #cv2.rectangle(img, (XSKIP, YSKIP), (XSKIP + WSKIP, YSKIP + HSKIP), (175, 175, 0),
-     #             cv2.FILLED)  # ASTRID bitte position hinzufuegen
-    # dann wird hier das rectangle beschrieben
-    #cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
-
-    # Score button
-    #cv2.rectangle(img, (XSCORE, YSCORE), (XSCORE + WSCORE, YSCORE + HSCORE), (0, 0, 0),
-     #             cv2.FILLED)  # ASTRID bitte position hinzufuegen
-    # dann wird hier das rectangle beschrieben
-    #cv2.putText(img, "Score:" + str(points), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     createStaticOuputGUI()
 
