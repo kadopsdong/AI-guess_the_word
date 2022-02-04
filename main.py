@@ -168,6 +168,7 @@ while True:
                     # buttons.pop(i) #Button wird geloescht
                     #   click = False
 
+                print(len(txtwordlist))
 
                 # Es wird das wort geskippt
                 if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke==True:
@@ -176,7 +177,7 @@ while True:
                     start_time = time.time()
                     Punkte = Punkte - 15
 
-                    if counterofwords == len(txtwordlist) + 1:
+                    if counterofwords == len(txtwordlist):
                         counterofwords = 0
 
     sleep(1)
