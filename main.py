@@ -204,7 +204,7 @@ while True:
     print(FinalString)
     
     #img, buttons = drawbuttons(img, letterlist[counterofwords])
-    img,buttons = transparent_layout(img, letterlist[counterofwords])
+    img = transparent_layout(img, letterlist[counterofwords])
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
