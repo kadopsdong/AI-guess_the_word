@@ -109,6 +109,8 @@ def drawbuttons(img, word):
         cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
+       # cv2.addWeighted(frame, 0.4, frame_cpy, 1 - alpha, gamma=0)
+
     return img, buttonlisttodraw
 
 
@@ -205,6 +207,10 @@ while True:
                     # if click == True:
                     FinalString += button.text
                     points += 1
+                    #deletes button if its correct
+                    if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
+                        img, buttons = drawbuttons(img, letterlist[counterOfWords].pop(i))
+
 
                 # Es wird das wort geskippt
                 if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
