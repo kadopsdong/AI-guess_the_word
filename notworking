@@ -1,0 +1,264 @@
+from asyncio import sleep
+from cgitb import text
+from typing import Final
+import cv2
+import cvzone
+from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
+import random
+import string
+from cvzone.SelfiSegmentationModule import SelfiSegmentation
+import time
+
+"""
+FAILED:
+
+#imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
+#segmentor = SelfiSegmentation()
+#img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
+
+
+"""
+
+# Camera settings
+WEBCAMID = 0  # primary cameraid
+LENGTHVIDEO = 1920
+WIDEVIDEO = 1080
+
+# Guessword game start variables
+counterOfWords = 0
+startTime = time.time()  # timer
+closed = False  # Hand is not closed at first
+font = cv2.FONT_HERSHEY_SIMPLEX  # text setup
+FinalString = ""  # Text where input is written
+
+# Postition für Skipbutton
+XSKIP = 0
+YSKIP = 400
+WSKIP = 185
+HSKIP = 85
+
+# Position Scoreboard
+XSCORE = 900
+YSCORE = 15
+WSCORE = 350
+HSCORE = 85
+points = 0
+
+
+class Button():
+    # Class to user for letterbuttons
+    def __init__(self, pos, text, size=[85, 85]):  # initialzation Method
+        self.pos = pos
+        self.size = size
+        self.text = text
+
+
+def setupCamera(WEBCAMID, LENGTHVIDEO, WIDEVIDEO):
+    cap = cv2.VideoCapture(WEBCAMID)
+    cap.set(3, LENGTHVIDEO)
+    cap.set(4, WIDEVIDEO)
+    return cap
+
+
+def setupHands(maxhands=1, accuracy=0.8):
+    # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
+    detector = HandDetector(detectionCon=accuracy,
+                            maxHands=maxhands)
+    return detector
+
+
+# liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
+def readtxt(path):
+    with open("words.txt") as f:
+        lines = f.readline()
+        txtwordlist = lines.split(";")
+    return txtwordlist
+
+
+# Wörter werden geshuffelt und mit random letters versehen
+def shuffleWords(txtwordlist):
+    letterlist = []
+    for i, word in enumerate(txtwordlist):
+        # es werden wörter gelöscht, die länger als 15 zeichen sind
+        if len(word) >= 15:
+            txtwordlist.pop(i)
+            continue
+
+        randletters = random.choices(string.ascii_lowercase, k=15 - len(word))
+        letterlist.append(list(word) + randletters)
+        random.shuffle(letterlist[i])
+        return letterlist
+
+
+# Hiermit wird das aktuelle wort gezeichnet
+def drawbuttons(img, word):
+    buttonlisttodraw = createbuttonwith(word)
+
+    for button in buttonlisttodraw:
+        x, y = button.pos  # Positon
+        w, h = button.size  # Größe startet bei 85,85
+        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)  # Koordinaten + Farben
+        cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
+                    5)  # Anzeigen des Buchstaben im Rechteck
+
+    return img, buttonlisttodraw
+
+
+# buttons aus einem wort erstellen
+def createbuttonwith(word):
+    letterlist = list(word)
+    buttonlist = []
+
+    for i, buchstabe in enumerate(letterlist):
+        x = 100
+        y = 100
+        if i < 5:
+            buttonlist.append(Button([x * i, y], buchstabe))
+        if 10 > i >= 5:
+            buttonlist.append(Button([x * (i - 5), y * 2], buchstabe))
+        if 15 > i >= 10:
+            buttonlist.append(Button([x * (i - 10), y * 3], buchstabe))
+
+    return buttonlist
+
+
+def createStaticOuputGUI(cv2):
+    # Timer button
+    cv2.rectangle(img, (10, 10), (10 + 330, 10 + 50), (255, 255, 0), cv2.FILLED)  # ASTRID bitte position hinzufuegen
+    cv2.putText(img, "Zeit:" + str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+
+    # Skip word button
+    cv2.rectangle(img, (XSKIP, YSKIP), (XSKIP + WSKIP, YSKIP + HSKIP), (175, 175, 0), cv2.FILLED)
+    cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+
+    # Score button
+    cv2.rectangle(img, (XSCORE, YSCORE), (XSCORE + WSCORE, YSCORE + HSCORE), (0, 0, 0), cv2.FILLED)
+    cv2.putText(img, "Score:" + str(points), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+
+    return cv2
+
+
+def createTextOutput(cv2, txt, color):
+    cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)
+    cv2.putText(img, txt, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    return cv2
+
+
+def getUsedTime(start_time):
+    used = time.time()
+    used_time = used - start_time
+    used_time = format(used_time, ".1f")
+    return used_time
+
+
+def checkToWriteText(length, closed):
+    # flanke wird zurückgesetzt
+    flanke = False
+
+    # wirkt sich darauf aus, das kein Buchstabe in FinalString geschrieben wird
+    if length > 40 and closed == True:
+        flanke = False
+        closed = False
+        print("Keine flanke")
+
+    # Flange wird gesetzt somit kann FinalString beschrieben werden
+    if length < 40 and closed == False:
+        flanke = True
+        closed = True
+        print("Flanke")
+
+    return flanke, closed
+
+
+cap = setupCamera(WEBCAMID, LENGTHVIDEO, WIDEVIDEO)
+detector = setupHands()
+txtwordlist = readtxt("words.txt")
+letterlist = shuffleWords(txtwordlist)
+
+while True:
+    # mit ESC kann abgebrochen werden
+    flanke = False
+
+    success, img = cap.read()  # Webcam auslesen
+    img = cv2.flip(img, 1)
+    hands, img = detector.findHands(img, draw=True, flipType=False)  # Gibt die Position der Hände zurück
+
+    # Wenn wort erkannt wurde
+    if FinalString == txtwordlist[counterOfWords]:
+        counterOfWords += 1
+        FinalString = ""
+        startTime = time.time()
+        points += 10
+        print("test")
+
+    if counterOfWords == len(txtwordlist) + 1:
+        counterOfWords = 0
+        startTime = time.time()
+
+    # distanz der Finger wird gemessen
+    if hands:
+        lmlist = hands[0]['lmList']
+        length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
+        Xfinger, Yfinger = lmlist[8]
+
+        flanke, closed = checkToWriteText(length, closed)
+        print(FinalString)
+        for i, button in enumerate(buttons):
+            x, y = button.pos
+            w, h = button.size
+
+            if length < 60:
+                print("warum")
+                # position von der Hand mit der Position des Buttons abgleichen
+                # muss in der range x,y und w,h
+                if x < Xfinger < x + w and y < Yfinger < y + h and flanke == True:
+                    cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
+                    FinalString += button.text
+                    sleep(10)
+
+                # Es wird das wort geskippt
+                if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
+                    print("1 " + str(counterOfWords))
+                    counterOfWords += 1
+                    FinalString = ""
+                    startTime = time.time()
+                    points = points - 15
+                    print("2 "+ str(counterOfWords))
+
+                    if counterOfWords == len(txtwordlist) + 1:
+                        counterOfWords = 0
+
+    print(letterlist)
+    print(counterOfWords)
+
+    img, buttons = drawbuttons(img, letterlist[counterOfWords])
+
+
+
+    # eingabe ist identisch mit lösung
+    if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
+
+        # wenn buchstabe richtig
+        if flanke == True:
+            points += 1
+
+        # rectangle bleibt grün
+        cv2 = createTextOutput(cv2, FinalString, (0, 255, 0))
+
+
+    else:  # eingabe ist Fehlerhaft
+        # rectangle wird rot
+        cv2 = createTextOutput(cv2, FinalString, (0, 255, 0))
+        points = points - 1
+
+        # lezter Buchstabe wird verworfen
+        FinalString = FinalString[:-1]
+
+    used_time = getUsedTime(startTime)
+
+    cv2 = createStaticOuputGUI(cv2)
+
+    cv2.imshow("image", img)
+
+    if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
+        break
