@@ -108,7 +108,26 @@ def createbuttonwith(word):
 #   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
 #  return
 
+#transpartente Buttons
+def transparent_layout(img, word):
+    imgNew = np.zeros_like(img, np.uint8)
+    buttonlisttodraw = createbuttonwith(word)
 
+    for button in buttonlisttodraw:
+        x, y = button.pos
+        w, h = button.size
+        cvzone.cornerRect(imgNew, (button.pos[0], button.pos[1],
+                                                   button.size[0],button.size[1]), 20 ,rt=0)
+        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)
+        cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
+                    5)
+
+    out = img.copy()
+    alpaha = 0.5
+    mask = imgNew.astype(bool)
+    #print(mask.shape)
+    out[mask] = cv2.addWeighted(img, alpaha, imgNew, 1-alpaha, 0)[mask]
+    return out
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 segmentor = SelfiSegmentation()
 counterofwords = 0
@@ -183,8 +202,9 @@ while True:
     sleep(1)
 
     print(FinalString)
-    durchgang = 0
-    img, buttons = drawbuttons(img, letterlist[counterofwords])
+    
+    #img, buttons = drawbuttons(img, letterlist[counterofwords])
+    img,buttons = transparent_layout(img, letterlist[counterofwords])
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
@@ -238,4 +258,5 @@ while True:
     cv2.imshow("image", img)
 
     if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
+        cv2.destroyAllWindows()
         break
