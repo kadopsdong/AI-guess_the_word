@@ -11,32 +11,70 @@ import string
 from cvzone.SelfiSegmentationModule import SelfiSegmentation
 import time
 
+"""
+Dieses Programm dient ist für Schüler kreiert, um Wörter erraten zu können
 
-webcamid = 0  # ist die Standard Kamera
-FinalString = ""
+"""
 
-cap = cv2.VideoCapture(webcamid)
-cap.set(3, 1920)  # Für die größe der Tastertur
-cap.set(4, 1080)  # HD Auflösung
+"""
+SETUP:
+    -Wörter, welche abgefragt werden müssen in words.txt abgelegt werden
+        - Buchstaben werden 1:1 übernommen (Großbuchstabe bleiben groß, Kleinbuchstaben bleiben klein)
+            -Vorteil: -Der Anfangsbuchstabe kann so leichter gefunden werden
+                      -Abkürzungen werden nicht verfälscht
+        - Wörter können maximal 15 Zeichen lang sein, dies erleichtert die Suche
+        - Wörter werden mit Zufälligen Buchstaben aufgefüllt (Sodass jedes Wort 15 Buchstaben enthält)
 
-# Postition für Skipbutton
-xskip = 0
-yskip = 400
-wskip = 185
-hskip = 85
+TODO:
 
-# Position Scoreboard
-xscore = 900
-yscore = 15
-wscore = 350
-hscore = 85
-Punkte = 0
 
-# um Tastatureingaben nachzuahmen
-keyboard = Controller()
+"""
+
+"""
+Camera settings (1920x1080)
+"""
+WEBCAMID = 0  # ist die Standardkamera (Webcam)
+LENGTHVIDEO = 1920
+WIDEVIDEO = 1080
+
+cap = cv2.VideoCapture(WEBCAMID)
+cap.set(3, LENGTHVIDEO)
+cap.set(4, WIDEVIDEO)
+
+"""
+GUI
+"""
+
+
+# for each letter take this button
+class Button():
+    def __init__(self, pos, text, size=[85, 85]):  # initialzation Method
+        self.pos = pos
+        self.size = size
+        self.text = text
+
 
 # setup text
 font = cv2.FONT_HERSHEY_SIMPLEX
+
+# position for skipbutton
+XSKIP = 0
+YSKIP = 400
+WSKIP = 185
+HSKIP = 85
+
+# position for scoreboard
+XSCORE = 900
+YSCORE = 15
+WSCORE = 350
+HSCORE = 85
+
+"""
+Guessword Spiel variablen 
+"""
+counterOfWords = 0
+FinalString = ""
+points = 0
 
 # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
 with open("words.txt") as f:
@@ -59,15 +97,6 @@ print(letterlist)
 
 detector = HandDetector(detectionCon=0.8,
                         maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
-
-
-# Klasse erstellen für eine Liste aller Buchstaben
-# nur einmal erstellen, da man keine Anderen Variablen Deklarieren muss
-class Button():
-    def __init__(self, pos, text, size=[85, 85]):  # initialzation Method
-        self.pos = pos
-        self.size = size
-        self.text = text
 
 
 # Hiermit wird das aktuelle wort gezeichnet
@@ -108,29 +137,9 @@ def createbuttonwith(word):
 #   cv2.putText(img,"<--",(300+25,300+25),cv2.FONT_HERSHEY_PLAIN, 5,(255,0,0),5)
 #  return
 
-#transpartente Buttons
-def transparent_layout(img, word):
-    imgNew = np.zeros_like(img, np.uint8)
-    buttonlisttodraw = createbuttonwith(word)
 
-    for button in buttonlisttodraw:
-        x, y = button.pos
-        w, h = button.size
-        cvzone.cornerRect(imgNew, (button.pos[0], button.pos[1],
-                                                   button.size[0],button.size[1]), 20 ,rt=0)
-        cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175), cv2.FILLED)
-        cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
-                    5)
-
-    out = img.copy()
-    alpaha = 0.5
-    mask = imgNew.astype(bool)
-    #print(mask.shape)
-    out[mask] = cv2.addWeighted(img, alpaha, imgNew, 1-alpaha, 0)[mask]
-    return out
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 segmentor = SelfiSegmentation()
-counterofwords = 0
 
 start_time = time.time()
 closed = False
@@ -143,14 +152,14 @@ while True:
     #    img = segmentor.removeBG(img, (100,255,0), threshold=0.3) #Beschränkt handerkennung zu sehr
 
     # Wenn wort erkannt wurde
-    if FinalString == txtwordlist[counterofwords]:
-        counterofwords += 1
+    if FinalString == txtwordlist[counterOfWords]:
+        counterOfWords += 1
         FinalString = ""
         start_time = time.time()
-        Punkte += 10
+        points += 10
 
-    if counterofwords == len(txtwordlist):
-        counterofwords = 0
+    if counterOfWords == len(txtwordlist):
+        counterOfWords = 0
         start_time = time.time()
 
     # distanz der Finger wird gemessen
@@ -159,6 +168,7 @@ while True:
         lmlist = hands[0]['lmList']
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
+
 
         if length > 40 and closed == True:
             flanke = False
@@ -190,28 +200,27 @@ while True:
                 print(len(txtwordlist))
 
                 # Es wird das wort geskippt
-                if xskip < Xfinger < xskip + wskip and yskip < Yfinger < yskip + hskip and flanke == True:
-                    counterofwords += 1
+                if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
+                    counterOfWords += 1
                     FinalString = ""
                     start_time = time.time()
-                    Punkte = Punkte - 15
+                    points = points - 15
 
-                    if counterofwords == len(txtwordlist):
-                        counterofwords = 0
+                    if counterOfWords == len(txtwordlist):
+                        counterOfWords = 0
 
     sleep(1)
 
     print(FinalString)
-    
-    #img, buttons = drawbuttons(img, letterlist[counterofwords])
-    img,buttons = transparent_layout(img, letterlist[counterofwords])
+    durchgang = 0
+    img, buttons = drawbuttons(img, letterlist[counterOfWords])
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
-    if FinalString == txtwordlist[counterofwords][:len(FinalString)]:
+    if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
         # rectangle bleibt grün
         # wenn buchstabe richtig
         if flanke == True:
-            Punkte += 1
+            points += 1
 
         cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
         # dann wird hier das rectangle beschrieben
@@ -224,7 +233,7 @@ while True:
         # dann wird hier das rectangle beschrieben
         cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
                     4)  # ASTRID Finalstring muss ausgegeben werden
-        Punkte = Punkte - 1
+        points = points - 1
 
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
@@ -244,19 +253,18 @@ while True:
     cv2.putText(img, "Zeit:" + str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Skip word button
-    cv2.rectangle(img, (xskip, yskip), (xskip + wskip, yskip + hskip), (175, 175, 0),
+    cv2.rectangle(img, (XSKIP, YSKIP), (XSKIP + WSKIP, YSKIP + HSKIP), (175, 175, 0),
                   cv2.FILLED)  # ASTRID bitte position hinzufuegen
     # dann wird hier das rectangle beschrieben
     cv2.putText(img, "Skip", (25, 470), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     # Score button
-    cv2.rectangle(img, (xscore, yscore), (xscore + wscore, yscore + hscore), (0, 0, 0),
+    cv2.rectangle(img, (XSCORE, YSCORE), (XSCORE + WSCORE, YSCORE + HSCORE), (0, 0, 0),
                   cv2.FILLED)  # ASTRID bitte position hinzufuegen
     # dann wird hier das rectangle beschrieben
-    cv2.putText(img, "Score:" + str(Punkte), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    cv2.putText(img, "Score:" + str(points), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     cv2.imshow("image", img)
 
     if cv2.waitKey(5) & 0xFF == 27:  # hexzahl für escape
-        cv2.destroyAllWindows()
         break
