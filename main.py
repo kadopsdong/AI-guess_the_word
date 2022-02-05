@@ -138,6 +138,11 @@ def createbuttonwith(word):
 
     return buttonlist
 
+def createTextOutput(color):
+    cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)  # ASTRID
+    # dann wird hier das rectangle beschrieben
+    cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    return cv2
 
 def createStaticOuputGUI():
     # Timer button
@@ -236,18 +241,12 @@ while True:
     if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
         # rectangle bleibt grün
         # wenn buchstabe richtig
-
-        cv2.rectangle(img, (75, 650), (800, 550), (0, 255, 0), cv2.FILLED)  # ASTRID
-        # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
-                    4)  # ASTRID Finalstring muss ausgegeben werden
+        createTextOutput((0, 255, 0))
 
     else:  # eingabe ist Fehlerhaft
         # rectangle wird rot
-        cv2.rectangle(img, (100, 650), (800, 550), (0, 0, 255), cv2.FILLED)  # ASTRID
-        # dann wird hier das rectangle beschrieben
-        cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255),
-                    4)  # ASTRID Finalstring muss ausgegeben werden
+        createTextOutput((0, 0, 255))
+
         points = points - 1
 
         # lezter Buchstabe wird verworfen
