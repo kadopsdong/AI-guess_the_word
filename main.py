@@ -78,8 +78,8 @@ points = 0
 closed = False
 
 
-# liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
 def readtxt(path):
+    # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
     with open(path) as f:
         lines = f.readline()
         txtwordlist = lines.split(";")
@@ -118,6 +118,12 @@ detector = HandDetector(detectionCon=0.8,
 
 # Hiermit wird das aktuelle wort gezeichnet
 def drawbuttons(img, word):
+    """
+
+    :param img: cv2
+    :param word:
+    :return: img = cv2, buttonlisttodraw = cv2Rectangle
+    """
     buttonlisttodraw = createbuttonwith(word)
 
     for button in buttonlisttodraw:
@@ -132,6 +138,16 @@ def drawbuttons(img, word):
 
 # buttons aus einem wort erstellen
 def createbuttonwith(word):
+    """
+    word -> Button()
+    Position:
+    [Button][Button][Button][Button][Button]
+    [Button][Button][Button][Button][Button]
+    [Button][Button][Button][Button][Button]
+
+    :param word:
+    :return: buttonlist = [Button,Button]
+    """
     letterlist = list(word)
     buttonlist = []
 
@@ -149,13 +165,17 @@ def createbuttonwith(word):
 
 
 def createTextOutput(color):
-    cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)  # ASTRID
-    # dann wird hier das rectangle beschrieben
+    # Returns FinalString where all input is written to
+    cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)
     cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
     return cv2
 
 
 def createStaticOuputGUI():
+    """
+    Creates Static Output
+    :return: cv2TimerRectangle, cv2SkipRectangle, cv2ScoreRectangle
+    """
     # Timer button
     cv2.rectangle(img, (10, 10), (10 + 330, 10 + 50), (255, 255, 0), cv2.FILLED)  # ASTRID bitte position hinzufuegen
     cv2.putText(img, "Zeit:" + str(used_time), (25, 55), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
@@ -179,7 +199,7 @@ def setUpFlanke(closed):
     :param closed:
     :return: flanke = bool, closed = bool
     """
-    flanke=False
+    flanke = False
 
     if length > 40 and closed == True:
         closed = False
@@ -193,14 +213,15 @@ def setUpFlanke(closed):
     return flanke, closed
 
 
-
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 # segmentor = SelfiSegmentation()
 
 start_time = time.time()
 
 while True:
-    flanke = False
+    """
+    ESC to break
+    """
     # mit ESC kann abgebrochen werden
     success, img = cap.read()  # Webcam auslesen
     img = cv2.flip(img, 1)
@@ -227,9 +248,7 @@ while True:
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
 
-
         flanke, closed = setUpFlanke(closed)
-
 
         for i, button in enumerate(buttons):
             x, y = button.pos
