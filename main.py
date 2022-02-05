@@ -76,17 +76,19 @@ counterOfWords = 0
 FinalString = ""
 points = 0
 closed = False
+start_time = time.time()
 
 
 def readtxt(path):
-    # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
+    """
+    reads words from path splittet by ";"
+    :param path:
+    :return: listWithWords
+    """
     with open(path) as f:
         lines = f.readline()
         txtwordlist = lines.split(";")
     return txtwordlist
-
-
-# Wörter werden geshuffelt und mit random letters versehen
 
 
 def shuffleWords():
@@ -107,14 +109,6 @@ def shuffleWords():
         letterlist.append(list(word) + randletters)
         random.shuffle(letterlist[i])
     return letterlist
-
-
-txtwordlist = readtxt("words.txt")
-letterlist = shuffleWords()
-
-detector = HandDetector(detectionCon=0.8,
-                        maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
-
 
 # Hiermit wird das aktuelle wort gezeichnet
 def drawbuttons(img, word):
@@ -165,7 +159,11 @@ def createbuttonwith(word):
 
 
 def createTextOutput(color):
-    # Returns FinalString where all input is written to
+    """
+    Returns FinalString where all input is written to
+    :param color:
+    :return: cv2Rectangle
+    """
     cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)
     cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
     return cv2
@@ -213,10 +211,29 @@ def setUpFlanke(closed):
     return flanke, closed
 
 
+def calculateTime():
+    """
+    Calculates time from start
+    :return: time
+    """
+    used = time.time()
+    used_time = used - start_time
+    used_time = format(used_time, ".1f")
+    return used_time
+
+
+
+txtwordlist = readtxt("words.txt")
+letterlist = shuffleWords()
+
+detector = HandDetector(detectionCon=0.8, maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
+
+
+
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
 # segmentor = SelfiSegmentation()
 
-start_time = time.time()
+
 
 while True:
     """
