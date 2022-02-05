@@ -77,9 +77,13 @@ FinalString = ""
 points = 0
 
 # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
-with open("words.txt") as f:
-    lines = f.readline()
-    txtwordlist = lines.split(";")
+def readtxt(path):
+    with open(path) as f:
+        lines = f.readline()
+        txtwordlist = lines.split(";")
+    return txtwordlist
+
+txtwordlist = readtxt("words.txt")
 
 # Wörter werden geshuffelt und mit random letters versehen
 letterlist = []
@@ -93,7 +97,7 @@ for i, word in enumerate(txtwordlist):
     letterlist.append(list(word) + randletters)
     random.shuffle(letterlist[i])
 
-print(letterlist)
+
 
 detector = HandDetector(detectionCon=0.8,
                         maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand

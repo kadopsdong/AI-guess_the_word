@@ -1,0 +1,4 @@
+opencv-python~=4.5.4.60
+cvzone~=1.5.3
+numpy~=1.21.3
+pynput~=1.7.5
