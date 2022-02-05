@@ -75,6 +75,7 @@ Guessword Spiel variablen
 counterOfWords = 0
 FinalString = ""
 points = 0
+closed = False
 
 
 # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
@@ -86,7 +87,15 @@ def readtxt(path):
 
 
 # Wörter werden geshuffelt und mit random letters versehen
+
+
 def shuffleWords():
+    """
+    - deletes word >= 15 letters
+    - fills letterlist up to 15 letters
+    - shuffles list
+    :return: list [word,randomletters] suffeld
+    """
     letterlist = []
     for i, word in enumerate(txtwordlist):
         # es werden wörter gelöscht, die länger als 15 zeichen sind
@@ -138,11 +147,13 @@ def createbuttonwith(word):
 
     return buttonlist
 
+
 def createTextOutput(color):
     cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)  # ASTRID
     # dann wird hier das rectangle beschrieben
     cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
     return cv2
+
 
 def createStaticOuputGUI():
     # Timer button
@@ -160,11 +171,34 @@ def createStaticOuputGUI():
     return cv2
 
 
+def setUpFlanke(closed):
+    """
+    - set flanke to False
+    - if fingers are open | closed = True -> nothing happens
+    - otherwise | flanke = True -> letter input is possible
+    :param closed:
+    :return: flanke = bool, closed = bool
+    """
+    flanke=False
+
+    if length > 40 and closed == True:
+        closed = False
+
+
+    elif length < 40 and closed == False:
+        flanke = True
+        print(flanke)
+        closed = True
+
+    return flanke, closed
+
+
+
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
-segmentor = SelfiSegmentation()
+# segmentor = SelfiSegmentation()
 
 start_time = time.time()
-closed = False
+
 while True:
     flanke = False
     # mit ESC kann abgebrochen werden
@@ -193,15 +227,9 @@ while True:
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
 
-        if length > 40 and closed == True:
-            flanke = False
-            closed = False
-        # print("!FLANKE")
 
-        if length < 40 and closed == False:
-            flanke = True
-            print(flanke)
-            closed = True
+        flanke, closed = setUpFlanke(closed)
+
 
         for i, button in enumerate(buttons):
             x, y = button.pos
