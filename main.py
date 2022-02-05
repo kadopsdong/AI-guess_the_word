@@ -76,6 +76,7 @@ counterOfWords = 0
 FinalString = ""
 points = 0
 
+
 # liest wörter aus txt-Datei, Wörter müssen mit ";" getrennt sein
 def readtxt(path):
     with open(path) as f:
@@ -83,21 +84,24 @@ def readtxt(path):
         txtwordlist = lines.split(";")
     return txtwordlist
 
-txtwordlist = readtxt("words.txt")
 
 # Wörter werden geshuffelt und mit random letters versehen
-letterlist = []
-for i, word in enumerate(txtwordlist):
-    # es werden wörter gelöscht, die länger als 15 zeichen sind
-    if len(word) >= 15:
-        txtwordlist.pop(i)
-        continue
+def shuffleWords():
+    letterlist = []
+    for i, word in enumerate(txtwordlist):
+        # es werden wörter gelöscht, die länger als 15 zeichen sind
+        if len(word) >= 15:
+            txtwordlist.pop(i)
+            continue
 
-    randletters = random.choices(string.ascii_lowercase, k=15 - len(word))
-    letterlist.append(list(word) + randletters)
-    random.shuffle(letterlist[i])
+        randletters = random.choices(string.ascii_lowercase, k=15 - len(word))
+        letterlist.append(list(word) + randletters)
+        random.shuffle(letterlist[i])
+    return letterlist
 
 
+txtwordlist = readtxt("words.txt")
+letterlist = shuffleWords()
 
 detector = HandDetector(detectionCon=0.8,
                         maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
@@ -113,7 +117,6 @@ def drawbuttons(img, word):
         cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175))  # Koordinaten + Farben
         cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
                     5)  # Anzeigen des Buchstaben im Rechteck
-
 
     return img, buttonlisttodraw
 
@@ -150,9 +153,6 @@ def createStaticOuputGUI():
     cv2.putText(img, "Score:" + str(points), (910, 73), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
 
     return cv2
-
-
-
 
 
 # imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
@@ -211,10 +211,9 @@ while True:
                     # if click == True:
                     FinalString += button.text
                     points += 1
-                    #deletes button if its correct
+                    # deletes button if its correct
                     if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
                         img, buttons = drawbuttons(img, letterlist[counterOfWords].pop(i))
-
 
                 # Es wird das wort geskippt
                 if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
@@ -228,8 +227,6 @@ while True:
                         counterOfWords = 0
                     else:
                         break
-
-
 
     print(FinalString)
     durchgang = 0
@@ -264,7 +261,6 @@ while True:
     used = time.time()
     used_time = used - start_time
     used_time = format(used_time, ".1f")
-
 
     createStaticOuputGUI()
 
