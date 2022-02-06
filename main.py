@@ -47,9 +47,6 @@ class Button():
         self.text = text
 
 
-# setup text
-font = cv2.FONT_HERSHEY_SIMPLEX
-
 # position for skipbutton
 XSKIP = 0
 YSKIP = 400
@@ -70,6 +67,9 @@ FinalString = ""
 points = 0
 closed = False
 start_time = time.time()
+
+# setup text
+font = cv2.FONT_HERSHEY_SIMPLEX
 
 
 def readtxt(path):
@@ -103,7 +103,7 @@ def shuffleWords():
         random.shuffle(letterlist[i])
     return letterlist
 
-# Hiermit wird das aktuelle wort gezeichnet
+
 def drawbuttons(img, word):
     """
     - Draw all letter as Button
@@ -219,18 +219,11 @@ def calculateTime():
     return used_time
 
 
-
 txtwordlist = readtxt("words.txt")
 letterlist = shuffleWords()
 
-detector = HandDetector(detectionCon=0.8, maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
-
-
-
-# imgBG = cv2.imread('strand.png')# Bild für den Hintergrund
-# segmentor = SelfiSegmentation()
-
-
+detector = HandDetector(detectionCon=0.8,
+                        maxHands=1)  # Hohe genauigkeit, um zu verhindern das random keys gedrückt werden, außerdem max 1 Hand
 
 while True:
     """
@@ -253,12 +246,11 @@ while True:
         counterOfWords = 0
         start_time = time.time()
 
-    # distanz der Finger wird gemessen
-
     img, buttons = drawbuttons(img, letterlist[counterOfWords])
 
     if hands:
         lmlist = hands[0]['lmList']
+        # distanz der Finger wird gemessen
         length, _, img = detector.findDistance(lmlist[8], lmlist[12], img)
         Xfinger, Yfinger = lmlist[8]
 
@@ -296,8 +288,6 @@ while True:
 
     print(FinalString)
 
-
-    # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
     if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
         # rectangle bleibt grün
@@ -313,15 +303,10 @@ while True:
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
-    # Button erstellen mit opencv
-    # cv2.rectangle(img,(100,100),(200,200),(255,0,255), cv2.FILLED) # Koordinaten + Farben
-    # cv2.putText(img,"Q" ,(115,180), cv2.FONT_HERSHEY_PLAIN,5,(255,255,255), 5) #Anzeigen des Buchstaben im Rechteck
-
     # Timer button
     used = time.time()
     used_time = used - start_time
     used_time = format(used_time, ".1f")
-
 
     createStaticOuputGUI()
 
