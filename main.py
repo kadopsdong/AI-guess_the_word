@@ -1,14 +1,7 @@
-from asyncio import sleep
-from cgitb import text
-from typing import Final
 import cv2
-import cvzone
 from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
-import numpy as np
-from pynput.keyboard import Controller
 import random
 import string
-from cvzone.SelfiSegmentationModule import SelfiSegmentation
 import time
 
 """
@@ -113,7 +106,11 @@ def shuffleWords():
 # Hiermit wird das aktuelle wort gezeichnet
 def drawbuttons(img, word):
     """
-
+    - Draw all letter as Button
+    - Postion:
+                    [Button][Button][Button][Button][Button]
+                    [Button][Button][Button][Button][Button]
+                    [Button][Button][Button][Button][Button]
     :param img: cv2
     :param word:
     :return: img = cv2, buttonlisttodraw = cv2Rectangle
@@ -135,9 +132,9 @@ def createbuttonwith(word):
     """
     word -> Button()
     Position:
-    [Button][Button][Button][Button][Button]
-    [Button][Button][Button][Button][Button]
-    [Button][Button][Button][Button][Button]
+                    [Button][Button][Button][Button][Button]
+                    [Button][Button][Button][Button][Button]
+                    [Button][Button][Button][Button][Button]
 
     :param word:
     :return: buttonlist = [Button,Button]
@@ -298,7 +295,7 @@ while True:
                         break
 
     print(FinalString)
-    durchgang = 0
+
 
     # drawdelButton() #button zum löschen wir hier mitgezeichnet
     # eingabe ist identisch mit lösung
@@ -312,7 +309,7 @@ while True:
         createTextOutput((0, 0, 255))
 
         points = points - 1
-
+        print(points)
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
@@ -324,6 +321,7 @@ while True:
     used = time.time()
     used_time = used - start_time
     used_time = format(used_time, ".1f")
+
 
     createStaticOuputGUI()
 
