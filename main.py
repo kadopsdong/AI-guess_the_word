@@ -281,7 +281,7 @@ while True:
                 if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
                     counterOfWords += 1
                     FinalString = ""
-                    points -= - 15
+                    points = points - 15
                     start_time = time.time()
                     print(points)
 
