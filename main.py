@@ -166,7 +166,7 @@ def createTextOutput(color):
     return cv2
 
 
-def createStaticOuputGUI():
+def createStaticOutputGUI():
     """
     Creates Static Output
     :return: cv2TimerRectangle, cv2SkipRectangle, cv2ScoreRectangle
@@ -307,7 +307,7 @@ while True:
         FinalString = FinalString[:-1]
 
     used_time = calculateTime()
-    createStaticOuputGUI()
+    createStaticOutputGUI()
 
     cv2.imshow("image", img)
 
