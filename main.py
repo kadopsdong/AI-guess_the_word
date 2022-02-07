@@ -121,7 +121,7 @@ def drawbuttons(img, word):
         x, y = button.pos  # Positon
         w, h = button.size  # Größe startet bei 85,85
         cv2.rectangle(img, button.pos, (x + w, y + h), (175, 0, 175))  # Koordinaten + Farben
-        cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (255, 255, 255),
+        cv2.putText(img, button.text, (x + 15, y + 75), cv2.FONT_HERSHEY_PLAIN, 5, (0, 0, 0),
                     5)  # Anzeigen des Buchstaben im Rechteck
 
     return img, buttonlisttodraw
@@ -162,7 +162,7 @@ def createTextOutput(color):
     :return: cv2Rectangle
     """
     cv2.rectangle(img, (75, 650), (800, 550), color, cv2.FILLED)
-    cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (255, 255, 255), 4)
+    cv2.putText(img, FinalString, (87, 645), cv2.FONT_HERSHEY_PLAIN, 4, (0, 0, 0), 4)
     return cv2
 
 
