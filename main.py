@@ -3,7 +3,6 @@ from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
 import random
 import string
 import time
-import asyncio
 
 """
 Dieses Programm dient ist für Schüler kreiert, um Wörter erraten zu können
