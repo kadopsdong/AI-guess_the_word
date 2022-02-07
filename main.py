@@ -264,20 +264,24 @@ while True:
                 # position von der Hand mit der Position des Buttons abgleichen
                 # muss in der range x,y und w,h
                 if x < Xfinger < x + w and y < Yfinger < y + h and flanke == True:
-                    # click= False
+                    #marks input
                     cv2.rectangle(img, (x - 5, y - 5), (x + w + 5, y + h + 5), (255, 0, 255), cv2.FILLED)
                     # if click == True:
                     FinalString += button.text
-                    points += 1
                     # deletes button if its correct
                     if FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
+                        points += 1
                         img, buttons = drawbuttons(img, letterlist[counterOfWords].pop(i))
+
+                    # points -1 if input is not correct
+                    if not FinalString == txtwordlist[counterOfWords][:len(FinalString)]:
+                        points -= 1
 
                 # Es wird das wort geskippt
                 if XSKIP < Xfinger < XSKIP + WSKIP and YSKIP < Yfinger < YSKIP + HSKIP and flanke == True:
                     counterOfWords += 1
                     FinalString = ""
-                    points = points - 15
+                    points -= - 15
                     start_time = time.time()
                     print(points)
 
@@ -298,7 +302,6 @@ while True:
         # rectangle wird rot
         createTextOutput((0, 0, 255))
 
-        points = points - 1
         print(points)
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
