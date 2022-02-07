@@ -3,6 +3,7 @@ from cvzone.HandTrackingModule import HandDetector  # benötigt Mediapipe
 import random
 import string
 import time
+import asyncio
 
 """
 Dieses Programm dient ist für Schüler kreiert, um Wörter erraten zu können
@@ -284,6 +285,7 @@ while True:
                     points = points - 15
                     start_time = time.time()
                     print(points)
+                    cv2.rectangle(img, (XSKIP - 5, YSKIP - 5), (XSKIP + WSKIP + 5, YSKIP + HSKIP + 5), (150, 150, 0), cv2.FILLED)
 
                     if counterOfWords == len(txtwordlist):
                         counterOfWords = 0
