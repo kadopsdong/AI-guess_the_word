@@ -303,11 +303,7 @@ while True:
         # lezter Buchstabe wird verworfen
         FinalString = FinalString[:-1]
 
-    # Timer button
-    used = time.time()
-    used_time = used - start_time
-    used_time = format(used_time, ".1f")
-
+    used_time = calculateTime()
     createStaticOuputGUI()
 
     cv2.imshow("image", img)
