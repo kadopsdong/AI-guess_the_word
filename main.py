@@ -56,7 +56,7 @@ HSKIP = 85
 # position for scoreboard
 XSCORE = 900
 YSCORE = 15
-WSCORE = 350
+WSCORE = 400
 HSCORE = 85
 
 """
